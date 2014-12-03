@@ -22,6 +22,8 @@
 #   * Git status is not allowed to take more than 1 second.
 #       * If it takes too long you will see a ? instead of D/I/U.
 #
+#   * Error code from last ran command ($?).
+#
 #
 # Dependencies (you should already have these):
 #
