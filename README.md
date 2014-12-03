@@ -21,7 +21,7 @@ What you get
       * If it takes too long you will see a ? instead of D/I/U.
 
 Dependencies (you should already have these)
-============================================
+--------------------------------------------
 
   256-color term  - needed for this to work at all
   git             - to enable working dir status indicators
@@ -30,29 +30,29 @@ Dependencies (you should already have these)
   Bash 4+         - to enable host colors, fav dirs, & Git status colors
 
 Powerline Fonts
-===============
+---------------
 
   You need to install a font with the special Powerline symbols.
 
-    <https://github.com/Lokaltog/powerline-fonts>
+    [](https://github.com/Lokaltog/powerline-fonts)
 
   Fonts only need to be installed on your client machine. If you are using
   SSH there is no need to install the fonts on the remote machine.
 
 Install Bashline
-================
+----------------
 
   Add this to your .bashrc (use full path to bashline.sh):
 
     PROMPT_COMMAND='PS1=$(bashline.sh "$?" "$(__git_ps1)")'
 
 Personalize
-===========
+-----------
 
   Customize your hosts colors and fav dirs below. Bash 4+ only.
 
 Note
-====
+----
 
   Bashline will attempt to degrade gracefully if there are missing
   dependencies. If you are missing a feature, you probably need to
