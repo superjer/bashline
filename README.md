@@ -3,6 +3,8 @@ Bashline
 
 Tiny, fast Powerline-like Bash prompt with max exec time
 
+![Bashline image](http://www.superjer.com/lies/bashline.png)
+
 What you get
 ------------
 
