@@ -111,10 +111,10 @@ else
 fi
 
 t1s=""
-which timeout >/dev/null 2>&1 && t1s="timeout 1s"
+hash timeout >/dev/null 2>&1 && t1s="timeout 1s"
 
 git=":"
-which git >/dev/null 2>&1 && git=git
+hash git >/dev/null 2>&1 && git=git
 
 function fav_conv {
   for x in "${!favs[@]}" ; do
@@ -129,11 +129,11 @@ function fav_conv {
 
 function colors {
   if [ $# -lt 1 ] ; then
-    echo -n "\[[0m\]"
+    echo -n "\[\e[0m\]"
   elif [ $# -lt 2 ] ; then
-    echo -n "\[[0;38;5;$1;49;22m\]"
+    echo -n "\[\e[0;38;5;${1};49m\]"
   else
-    echo -n "\[[0;38;5;$1;48;5;$2;22m\]"
+    echo -n "\[\e[0;38;5;${1};48;5;${2}m\]"
   fi
 }
 
