@@ -4,7 +4,7 @@ Bashline
 Tiny, fast Powerline-like Bash prompt with max exec time
 
 What you get
-============
+------------
 
   * Color-coded hostnames when you SSH to different machines.
 
@@ -34,7 +34,7 @@ Powerline Fonts
 
   You need to install a font with the special Powerline symbols.
 
-     https://github.com/Lokaltog/powerline-fonts
+    <https://github.com/Lokaltog/powerline-fonts>
 
   Fonts only need to be installed on your client machine. If you are using
   SSH there is no need to install the fonts on the remote machine.
