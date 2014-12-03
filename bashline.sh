@@ -222,7 +222,7 @@ function mkline {
 
       delim=" "
     done
-  done <<< "$path"
+  done <<< "$pathfav"
 
   local colorleft=240
 
