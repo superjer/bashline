@@ -64,7 +64,7 @@
 error=$1
 branch=$2
 
-# legth to shorten username and hostname to
+# length to shorten username and hostname to
 shorten=2
 
 if [ ${BASH_VERSINFO[0]} -ge 4 ] ; then
