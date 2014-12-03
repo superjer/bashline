@@ -139,9 +139,20 @@ function colors {
 
 function mkline {
   local hostname=${HOSTNAME%%.*}
+  if [ -z "$hostname" ] ; then hostname=$($t1s hostname -s) ; fi
+  if [ -z "$hostname" ] ; then hostname='::'                ; fi
   local hostshort=${hostname:0:$shorten}
-  local meshort=${USER:0:$shorten}
-  local path=$(fav_conv $(pwd))
+
+  local me=$USER
+  if [ -z "$me" ] ; then me=$($t1s whoami) ; fi
+  if [ -z "$me" ] ; then me=':('           ; fi
+  local meshort=${me:0:$shorten}
+
+  local path=$PWD
+  if [ -z "$path" ] ; then path=$($t1s pwd)    ; fi
+  if [ -z "$path" ] ; then path=PATH_NOT_FOUND ; fi
+  local pathfav=$(fav_conv $path)
+
   local porc=""
   local dirty=""
   local index=""
@@ -244,4 +255,4 @@ function mkline {
   colors
 }
 
-mkline
+mkline 2>/dev/null
