@@ -23,22 +23,18 @@ What you get
 Dependencies (you should already have these)
 --------------------------------------------
 
-  256-color term  - needed for this to work at all
-  
-  git             - to enable working dir status indicators
-  
-  __git_ps1       - to see branch name, merge status, etc.
-  
-  timeout         - to enable max exec time feature
-  
-  Bash 4+         - to enable host colors, fav dirs, & Git status colors
+  * 256-color term  - needed for this to work at all
+  * git             - to enable working dir status indicators
+  * __git_ps1       - to see branch name, merge status, etc.
+  * timeout         - to enable max exec time feature
+  * Bash 4+         - to enable host colors, fav dirs, & Git status colors
 
 Powerline Fonts
 ---------------
 
   You need to install a font with the special Powerline symbols.
 
-  https://github.com/Lokaltog/powerline-fonts
+  <https://github.com/Lokaltog/powerline-fonts>
 
   Fonts only need to be installed on your client machine. If you are using
   SSH there is no need to install the fonts on the remote machine.
