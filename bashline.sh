@@ -127,8 +127,6 @@ function fav_conv {
   echo __ROOT__$1
 }
 
-function join { local IFS="$1"; shift; echo -n "$*"; }
-
 function colors {
   if [ $# -lt 1 ] ; then
     echo -n "\[[0m\]"
