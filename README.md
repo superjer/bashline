@@ -24,9 +24,13 @@ Dependencies (you should already have these)
 --------------------------------------------
 
   256-color term  - needed for this to work at all
+  
   git             - to enable working dir status indicators
+  
   __git_ps1       - to see branch name, merge status, etc.
+  
   timeout         - to enable max exec time feature
+  
   Bash 4+         - to enable host colors, fav dirs, & Git status colors
 
 Powerline Fonts
