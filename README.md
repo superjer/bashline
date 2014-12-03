@@ -45,7 +45,7 @@ Install Bashline
 Personalize
 -----------
 
-  Customize your hosts colors and fav dirs below. Bash 4+ only.
+  Customize your hosts colors and fav dirs at the beginning of the code. Bash 4+ only.
 
 Note
 ----
