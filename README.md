@@ -7,16 +7,12 @@ What you get
 ------------
 
   * Color-coded hostnames when you SSH to different machines.
-
   * Powerline-like path with abbreviations for favorite dirs.
-
   * Git branch, detached head, merge- or rebase-state (__git_ps1).
-
   * Color-coded Git working dir indicators:
       * D - dirty   - blue  - tracked files have modifications
       * I - index   - green - files have been indexed / added
       * U - unknown - red   - untracked files present
-
   * Git status is not allowed to take more than 1 second.
       * If it takes too long you will see a ? instead of D/I/U.
 
