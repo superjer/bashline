@@ -97,12 +97,12 @@ if [ ${BASH_VERSINFO[0]} -ge 4 ] ; then
 
   declare -A diu
   diu[D]=27
-  diu[I]=46
-  diu[U]=160
-  diu[DI]=51
-  diu[DU]=165
-  diu[IU]=226
-  diu[DIU]=231
+  diu[I]=29
+  diu[U]=125
+  diu[DI]=38
+  diu[DU]=99
+  diu[IU]=228
+  diu[DIU]=159
   diu['?']=196
 else
   hosts="16 22"
@@ -179,6 +179,7 @@ function mkline {
   branch=${branch//\)\)}
   branch=${branch//\(}
   branch=${branch//\)}
+  branch=${branch//|/ }
 
   if [ -n "${hosts[$hostname]}" ] ; then
     hostcolors=${hosts[$hostname]}
@@ -234,7 +235,7 @@ function mkline {
       colors ${diu[$status]} 17
       echo -n " $status"
     else
-      colors 238 17
+      colors 240 17
       echo -n ""
     fi
 
