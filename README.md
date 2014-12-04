@@ -2,6 +2,7 @@ Bashline
 ========
 
 Tiny, fast Powerline-like Bash prompt with max exec time
+<https://github.com/superjer/bashline>
 
 ![Bashline image](http://www.superjer.com/lies/bashline.png)
 
@@ -23,20 +24,10 @@ Dependencies (you should already have these)
 --------------------------------------------
 
   * 256-color term  - needed for this to work at all
-  * git             - to enable working dir status indicators
+  * Git             - to enable working dir status indicators
   * __git_ps1       - to see branch name, merge status, etc.
   * timeout         - to enable max exec time feature
   * Bash 4+         - to enable host colors, fav dirs, & Git status colors
-
-Powerline Fonts
----------------
-
-  You need to install a font with the special Powerline symbols.
-
-  <https://github.com/Lokaltog/powerline-fonts>
-
-  Fonts only need to be installed on your client machine. If you are using
-  SSH there is no need to install the fonts on the remote machine.
 
 Install and personalize Bashline
 --------------------------------
@@ -45,8 +36,12 @@ Install and personalize Bashline
 
   Here's an example that also adds host colors and favorite dirs: (Bash 4+ required)
 
-    # .bashrc contents
+  To install, just source bashline.sh in your .bashrc file. Like this:
+
     . /path/to/bashline.sh
+
+  Here's an example configuration for host colors: (Bash 4+ required)
+
     bashline_hosts[lala]="230 128" # 230 foreground, 128 background
     bashline_hosts[lois]="201 55"
     bashline_hosts[clark]="231 160"
@@ -63,18 +58,34 @@ Install and personalize Bashline
     bashline_hosts[ferdinand]="88 172"
     bashline_hosts[swingline]="124 228"
     bashline_hosts[snickerdoodle]="214 25"
+
+  Here's an example configuration for favorite dirs: (Bash 4+ required)
+
     bashline_favs[/var/www/html/superjer.com]="♥ j"
     bashline_favs[/var/www/html/mcdiddys.com]="♥ mcd"
     bashline_favs[/weirdly/long/path/that/makes/the/prompt/sad]="♥ a short name"
 
-  256-color terminal palette in pictures:
+  You can choose your own colors. Here's the 256-color terminal palette in pictures:
 
   <http://blog.yjl.im/2013/02/terminal-256-colors-scripts.html>
 
+  If you have Powerline Fonts installed, get Bashline to use the fancy symbols:
+
+    bashline_powerline_font=on
+
   You can also shorten host and usernames to your liking:
 
-    # .bashrc again
     bashline_shorten=5  # shorten to just 5 characters
+
+Powerline Fonts
+---------------
+
+  For the best visuals, install a Powerline Font, and enable as shown above.
+
+  <https://github.com/Lokaltog/powerline-fonts>
+
+  Fonts only need to be installed on your client machine. If you are using
+  SSH there is no need to install the fonts on the remote machine.
 
 Note
 ----
