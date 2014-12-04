@@ -92,7 +92,7 @@ function bashline_prompt {
   local hostcolors=""
 
   if [ -n "$branch" ] ; then
-    porc=$($t1s $git status --porcelain | cut -c1-2 | tr ' ' .)
+    porc=$($t1s $git status --porcelain 2>/dev/null | cut -c1-2 | tr ' ' .)
     if [ ${PIPESTATUS[0]} -eq 124 ] ; then
       dirty='?'
     else
