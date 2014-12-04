@@ -75,7 +75,7 @@
 #
 #     http://blog.yjl.im/2013/02/terminal-256-colors-scripts.html
 #
-#  You can also set the hostname and user to get shortened to your liking:
+#  You can also shorten host and usernames to your liking:
 #
 #     bashline_shorten=5  # shorten to just 5 characters
 #

@@ -38,17 +38,43 @@ Powerline Fonts
   Fonts only need to be installed on your client machine. If you are using
   SSH there is no need to install the fonts on the remote machine.
 
-Install Bashline
-----------------
+Install and personalize Bashline
+--------------------------------
 
-  Add this to your .bashrc (use full path to bashline.sh):
+  To install, just source bashline.sh in your .bashrc file.
 
-    PROMPT_COMMAND='PS1=$(bashline.sh "$?" "$(__git_ps1)")'
+  Here's an example that also adds host colors and favorite dirs: (Bash 4+ required)
 
-Personalize
------------
+    # .bashrc contents
+    . /path/to/bashline.sh
+    bashline_hosts[lala]="230 128" # 230 foreground, 128 background
+    bashline_hosts[lois]="201 55"
+    bashline_hosts[clark]="231 160"
+    bashline_hosts[swamp]="148 22"
+    bashline_hosts[xenon]="160 234"
+    bashline_hosts[kristi]="17 214"
+    bashline_hosts[tengen]="231 198"
+    bashline_hosts[creeper]="16 112"
+    bashline_hosts[infocom]="226 211"
+    bashline_hosts[krypton]="99 54"
+    bashline_hosts[macpork]="87 99"
+    bashline_hosts[icecrown]="51 18"
+    bashline_hosts[magellan]="226 202"
+    bashline_hosts[ferdinand]="88 172"
+    bashline_hosts[swingline]="124 228"
+    bashline_hosts[snickerdoodle]="214 25"
+    bashline_favs[/var/www/html/superjer.com]="♥ j"
+    bashline_favs[/var/www/html/mcdiddys.com]="♥ mcd"
+    bashline_favs[/weirdly/long/path/that/makes/the/prompt/sad]="♥ a short name"
 
-  Customize your hosts colors and fav dirs at the beginning of the code. Bash 4+ only.
+  256-color terminal palette in pictures:
+
+    <http://blog.yjl.im/2013/02/terminal-256-colors-scripts.html>
+
+  You can also shorten host and usernames to your liking:
+
+    # .bashrc again
+    bashline_shorten=5  # shorten to just 5 characters
 
 Note
 ----
