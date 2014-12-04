@@ -44,16 +44,40 @@
 #   SSH there is no need to install the fonts on the remote machine.
 #
 #
-# Install Bashline:
+# Install and personalize Bashline:
 #
-#   Add this to your .bashrc (use full path to bashline.sh):
+#   To install, just source bashline.sh in your .bashrc file.
 #
-#     PROMPT_COMMAND='PS1=$(bashline.sh "$?" "$(__git_ps1)")'
+#   Here's an example that also adds host colors and favorite dirs: (Bash 4+ required)
 #
+#     . /path/to/bashline.sh
+#     bashline_hosts[lala]="230 128" # 230 foreground, 128 background
+#     bashline_hosts[lois]="201 55"
+#     bashline_hosts[clark]="231 160"
+#     bashline_hosts[swamp]="148 22"
+#     bashline_hosts[xenon]="160 234"
+#     bashline_hosts[kristi]="17 214"
+#     bashline_hosts[tengen]="231 198"
+#     bashline_hosts[creeper]="16 112"
+#     bashline_hosts[infocom]="226 211"
+#     bashline_hosts[krypton]="99 54"
+#     bashline_hosts[macpork]="87 99"
+#     bashline_hosts[icecrown]="51 18"
+#     bashline_hosts[magellan]="226 202"
+#     bashline_hosts[ferdinand]="88 172"
+#     bashline_hosts[swingline]="124 228"
+#     bashline_hosts[snickerdoodle]="214 25"
+#     bashline_favs[/var/www/html/superjer.com]="♥ j"
+#     bashline_favs[/var/www/html/mcdiddys.com]="♥ mcd"
+#     bashline_favs[/weirdly/long/path/that/makes/the/prompt/sad]="♥ a short name"
 #
-# Personalize:
+#  256-color terminal palette in pictures:
 #
-#   Customize your hosts colors and fav dirs below. Bash 4+ only.
+#     http://blog.yjl.im/2013/02/terminal-256-colors-scripts.html
+#
+#  You can also set the hostname and user to get shortened to your liking:
+#
+#     bashline_shorten=5  # shorten to just 5 characters
 #
 #
 # Note:
@@ -63,71 +87,15 @@
 #   install or upgrade the relevant program.
 #
 
-error=$1
-branch=$2
-
-# length to shorten username and hostname to
-shorten=2
-
 if [ ${BASH_VERSINFO[0]} -ge 4 ] ; then
-  declare -A hosts # customize these:
-  hosts[default]="16 221"
-  hosts[lala]="230 128"
-  hosts[lois]="201 55"
-  hosts[clark]="231 160"
-  hosts[swamp]="148 22"
-  hosts[xenon]="160 234"
-  hosts[kristi]="17 214"
-  hosts[tengen]="231 198"
-  hosts[creeper]="16 112"
-  hosts[infocom]="226 211"
-  hosts[krypton]="99 54"
-  hosts[macpork]="87 99"
-  hosts[icecrown]="51 18"
-  hosts[magellan]="226 202"
-  hosts[ferdinand]="88 172"
-  hosts[swingline]="124 228"
-  hosts[snickerdoodle]="214 25"
+  declare -A bashline_hosts # customize these:
+  bashline_hosts[default]="16 221"
 
-  declare -A favs # customize these:
-  favs[$HOME]="~"
-  favs[/var/www/html/superjer.com]="♥ sj"
-  favs[/var/www/html/mcdiddys.com]="♥ mcd"
-  favs[/weirdly/long/path/that/makes/the/prompt/sad]="♥ a short name"
-
-  declare -A diu
-  diu[D]=27
-  diu[I]=29
-  diu[U]=125
-  diu[DI]=38
-  diu[DU]=99
-  diu[IU]=228
-  diu[DIU]=159
-  diu['?']=196
-else
-  hosts="16 22"
-  favs=""
-  diu=27
+  declare -A bashline_favs # customize these:
+  bashline_favs[$HOME]="~"
 fi
 
-t1s=""
-hash timeout >/dev/null 2>&1 && t1s="timeout 1s"
-
-git=":"
-hash git >/dev/null 2>&1 && git=git
-
-function fav_conv {
-  for x in "${!favs[@]}" ; do
-    if [[ $1 == $x* ]] ; then
-      echo ${favs["$x"]}${1:${#x}}
-      return
-    fi
-  done
-
-  echo __ROOT__$1
-}
-
-function colors {
+function bashline_colors {
   if [ $# -lt 1 ] ; then
     echo -n "\[\e[0m\]"
   elif [ $# -lt 2 ] ; then
@@ -137,7 +105,35 @@ function colors {
   fi
 }
 
-function mkline {
+function bashline_prompt {
+  local error=$1
+  local branch=$2
+
+  local -i shorten=$bashline_shorten
+  if [ $shorten -lt 1 ] ; then shorten=2 ; fi
+
+  if [ ${BASH_VERSINFO[0]} -ge 4 ] ; then
+    local -A diu
+    diu[D]=27
+    diu[I]=29
+    diu[U]=125
+    diu[DI]=38
+    diu[DU]=99
+    diu[IU]=228
+    diu[DIU]=159
+    diu['?']=196
+  else
+    bashline_hosts="16 22"
+    bashline_favs=""
+    diu=27
+  fi
+
+  local t1s=""
+  hash timeout >/dev/null 2>&1 && t1s="timeout 1s"
+
+  local git=":"
+  hash git >/dev/null 2>&1 && git=git
+
   local hostname=${HOSTNAME%%.*}
   if [ -z "$hostname" ] ; then hostname=$($t1s hostname -s) ; fi
   if [ -z "$hostname" ] ; then hostname='::'                ; fi
@@ -151,7 +147,14 @@ function mkline {
   local path=$PWD
   if [ -z "$path" ] ; then path=$($t1s pwd)    ; fi
   if [ -z "$path" ] ; then path=PATH_NOT_FOUND ; fi
-  local pathfav=$(fav_conv $path)
+  local pathfav=__ROOT__$path
+
+  for x in "${!bashline_favs[@]}" ; do
+    if [[ $path == $x* ]] ; then
+      pathfav=${bashline_favs["$x"]}${path:${#x}}
+      break
+    fi
+  done
 
   local porc=""
   local dirty=""
@@ -181,24 +184,24 @@ function mkline {
   branch=${branch//\)}
   branch=${branch//|/ }
 
-  if [ -n "${hosts[$hostname]}" ] ; then
-    hostcolors=${hosts[$hostname]}
+  if [ -n "${bashline_hosts[$hostname]}" ] ; then
+    hostcolors=${bashline_hosts[$hostname]}
   else
-    hostcolors=${hosts[default]}
+    hostcolors=${bashline_hosts[default]}
   fi
 
-  colors $hostcolors
+  bashline_colors $hostcolors
 
   if [ -n "$SSH_CLIENT" ] ; then
     echo -n " "
   fi
 
   echo -n " $hostshort "
-  colors ${hostcolors#* } 31
+  bashline_colors ${hostcolors#* } 31
   echo -n " "
-  colors 231 31
+  bashline_colors 231 31
   echo -n "$meshort "
-  colors 31 240
+  bashline_colors 31 240
   echo -n " "
 
   delim=""
@@ -214,11 +217,11 @@ function mkline {
       fi
 
       if [ -n "$delim" ] ; then
-        colors 236 240
+        bashline_colors 236 240
         echo -n "$delim "
       fi
 
-      colors 252 240
+      bashline_colors 252 240
       echo -n "$x "
 
       delim=""
@@ -228,14 +231,14 @@ function mkline {
   local colorleft=240
 
   if [ -n "$branch" ] ; then
-    colors $colorleft 17
+    bashline_colors $colorleft 17
     echo -n " "
 
     if [ -n "$status" ] ; then
-      colors ${diu[$status]} 17
+      bashline_colors ${diu[$status]} 17
       echo -n " $status"
     else
-      colors 240 17
+      bashline_colors 240 17
       echo -n ""
     fi
 
@@ -244,16 +247,16 @@ function mkline {
   fi
 
   if [ "$error" -ne 0 ] ; then
-    colors $colorleft 52
+    bashline_colors $colorleft 52
     echo -n " "
-    colors 231 52
+    bashline_colors 231 52
     echo -n "$error "
     colorleft=52
   fi
 
-  colors $colorleft
+  bashline_colors $colorleft
   echo -n " "
-  colors
+  bashline_colors
 }
 
-mkline 2>/dev/null
+PROMPT_COMMAND='PS1=$(bashline_prompt "$?" "$(__git_ps1)" || "$PS1")'
