@@ -69,7 +69,7 @@ Install and personalize Bashline
 
   256-color terminal palette in pictures:
 
-    <http://blog.yjl.im/2013/02/terminal-256-colors-scripts.html>
+  <http://blog.yjl.im/2013/02/terminal-256-colors-scripts.html>
 
   You can also shorten host and usernames to your liking:
 
