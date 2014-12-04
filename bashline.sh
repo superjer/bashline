@@ -259,4 +259,4 @@ function bashline_prompt {
   bashline_colors
 }
 
-PROMPT_COMMAND='PS1=$(bashline_prompt "$?" "$(__git_ps1)" || "$PS1")'
+PROMPT_COMMAND='PS1=$(bashline_prompt "$?" "$(hash __git_ps1 2>/dev/null && __git_ps1)" || "$PS1")'
