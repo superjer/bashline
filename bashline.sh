@@ -52,7 +52,7 @@ function bashline_prompt {
     diu[DIU]=159
     diu['?']=196
   else
-    bashline_hosts="16 22"
+    bashline_hosts="16 221"
     bashline_favs=""
     diu=27
   fi
