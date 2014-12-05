@@ -63,7 +63,7 @@ Install and personalize Bashline
 
   You can choose your own colors. Here's the 256-color terminal palette in pictures:
 
-  <http://blog.yjl.im/2013/02/terminal-256-colors-scripts.html>
+  ![Terminal-256-colors Palette](terminal-256-colors.png)
 
   If you have Powerline Fonts installed, get Bashline to use the fancy symbols:
 
