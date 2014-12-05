@@ -32,10 +32,6 @@ Dependencies (you should already have these)
 Install and personalize Bashline
 --------------------------------
 
-  To install, just source bashline.sh in your .bashrc file.
-
-  Here's an example that also adds host colors and favorite dirs: (Bash 4+ required)
-
   To install, just source bashline.sh in your .bashrc file. Like this:
 
     . /path/to/bashline.sh
