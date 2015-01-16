@@ -86,16 +86,19 @@ function bashline_prompt {
   done
 
   local porc=""
+  local pipestatus=""
   local dirty=""
   local index=""
   local unknown=""
   local hostcolors=""
 
   if [ -n "$branch" ] ; then
-    porc=$($t1s $git status --porcelain 2>/dev/null | cut -c1-2 | tr ' ' .)
-    if [ ${PIPESTATUS[0]} -eq 124 ] ; then
+    porc=$($t1s $git status --porcelain 2>/dev/null)
+    pipestatus=${PIPESTATUS[0]}
+    if [ $pipestatus -eq 124 ] ; then
       dirty='?'
     else
+      porc=$(echo "$porc" | cut -c1-2 | tr ' ' .)
       for x in $porc ; do
         [[ "${x:1:1}" == [MADCRU] ]] && dirty=D
         [[ "${x:0:1}" == [MADCRU] ]] && index=I
