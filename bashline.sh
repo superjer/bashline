@@ -1,133 +1,18 @@
 #!/bin/bash
 #
-#
 # Bashline
 # Tiny, fast Powerline-like Bash prompt with max exec time
 # https://github.com/superjer/bashline
-#
-#
-# What you get:
-#
-#   * Color-coded hostnames when you SSH to different machines.
-#
-#   * Powerline-like path with abbreviations for favorite dirs.
-#
-#   * Git branch, detached head, merge- or rebase-state (__git_ps1).
-#
-#   * Color-coded Git working dir indicators:
-#       * D - dirty   - blue  - tracked files have modifications
-#       * I - index   - green - files have been indexed / added
-#       * U - unknown - red   - untracked files present
-#
-#   * Git status is not allowed to take more than 1 second.
-#       * If it takes too long you will see a ? instead of D/I/U.
-#
-#   * Error code from last ran command ($?).
-#
-#
-# Dependencies (you should already have these):
-#
-#   256-color term  - needed for this to work at all
-#   git             - to enable working dir status indicators
-#   __git_ps1       - to see branch name, merge status, etc.
-#   timeout         - to enable max exec time feature
-#   Bash 4+         - to enable host colors, fav dirs, & Git status colors
-#
-#
-# Powerline Fonts:
-#
-#   You need to install a font with the special Powerline symbols.
-#
-#      https://github.com/Lokaltog/powerline-fonts
-#
-#   Fonts only need to be installed on your client machine. If you are using
-#   SSH there is no need to install the fonts on the remote machine.
-#
-#
-# Install Bashline:
-#
-#   Add this to your .bashrc (use full path to bashline.sh):
-#
-#     PROMPT_COMMAND='PS1=$(bashline.sh "$?" "$(__git_ps1)")'
-#
-#
-# Personalize:
-#
-#   Customize your hosts colors and fav dirs below. Bash 4+ only.
-#
-#
-# Note:
-#
-#   Bashline will attempt to degrade gracefully if there are missing
-#   dependencies. If you are missing a feature, you probably need to
-#   install or upgrade the relevant program.
-#
-
-error=$1
-branch=$2
-
-# length to shorten username and hostname to
-shorten=2
 
 if [ ${BASH_VERSINFO[0]} -ge 4 ] ; then
-  declare -A hosts # customize these:
-  hosts[default]="16 221"
-  hosts[lala]="230 128"
-  hosts[lois]="201 55"
-  hosts[clark]="231 160"
-  hosts[swamp]="148 22"
-  hosts[xenon]="160 234"
-  hosts[kristi]="17 214"
-  hosts[tengen]="231 198"
-  hosts[creeper]="16 112"
-  hosts[infocom]="226 211"
-  hosts[krypton]="99 54"
-  hosts[macpork]="87 99"
-  hosts[icecrown]="51 18"
-  hosts[magellan]="226 202"
-  hosts[ferdinand]="88 172"
-  hosts[swingline]="124 228"
-  hosts[snickerdoodle]="214 25"
+  declare -A bashline_hosts # customize these:
+  bashline_hosts[default]="16 221"
 
-  declare -A favs # customize these:
-  favs[$HOME]="~"
-  favs[/var/www/html/superjer.com]="♥ sj"
-  favs[/var/www/html/mcdiddys.com]="♥ mcd"
-  favs[/weirdly/long/path/that/makes/the/prompt/sad]="♥ a short name"
-
-  declare -A diu
-  diu[D]=27
-  diu[I]=46
-  diu[U]=160
-  diu[DI]=51
-  diu[DU]=165
-  diu[IU]=226
-  diu[DIU]=231
-  diu['?']=196
-else
-  hosts="16 22"
-  favs=""
-  diu=27
+  declare -A bashline_favs # customize these:
+  bashline_favs[$HOME]="~"
 fi
 
-t1s=""
-hash timeout >/dev/null 2>&1 && t1s="timeout 1s"
-
-git=":"
-hash git >/dev/null 2>&1 && git=git
-
-function fav_conv {
-  for x in "${!favs[@]}" ; do
-    if [[ $1 == $x* ]] ; then
-      echo ${favs["$x"]}${1:${#x}}
-      return
-    fi
-  done
-
-  echo __ROOT__$1
-}
-
-function colors {
+function bashline_colors {
   if [ $# -lt 1 ] ; then
     echo -n "\[\e[0m\]"
   elif [ $# -lt 2 ] ; then
@@ -137,22 +22,83 @@ function colors {
   fi
 }
 
-function mkline {
+function bashline_prompt {
+  local error=$1
+  local branch=$2
+
+  local sym_ssh='⚿'
+  local sym_sep='❭'
+  local sym_section='▶'
+  local sym_branch='┣'
+
+  if [ -n "$bashline_powerline_font" ] ; then
+    local sym_ssh=''
+    local sym_sep=''
+    local sym_section=''
+    local sym_branch=''
+  fi
+
+  local -i shorten=$bashline_shorten
+  if [ $shorten -lt 1 ] ; then shorten=2 ; fi
+
+  if [ ${BASH_VERSINFO[0]} -ge 4 ] ; then
+    local -A diu
+    diu[D]=27
+    diu[I]=29
+    diu[U]=125
+    diu[DI]=38
+    diu[DU]=99
+    diu[IU]=228
+    diu[DIU]=159
+    diu['?']=196
+  else
+    bashline_hosts="16 221"
+    bashline_favs=""
+    diu=27
+  fi
+
+  local t1s=""
+  hash timeout >/dev/null 2>&1 && t1s="timeout 1s"
+
+  local git=":"
+  hash git >/dev/null 2>&1 && git=git
+
   local hostname=${HOSTNAME%%.*}
+  if [ -z "$hostname" ] ; then hostname=$($t1s hostname -s) ; fi
+  if [ -z "$hostname" ] ; then hostname='::'                ; fi
   local hostshort=${hostname:0:$shorten}
-  local meshort=${USER:0:$shorten}
-  local path=$(fav_conv $(pwd))
+
+  local me=$USER
+  if [ -z "$me" ] ; then me=$($t1s whoami) ; fi
+  if [ -z "$me" ] ; then me=':('           ; fi
+  local meshort=${me:0:$shorten}
+
+  local path=$PWD
+  if [ -z "$path" ] ; then path=$($t1s pwd)    ; fi
+  if [ -z "$path" ] ; then path=PATH_NOT_FOUND ; fi
+  local pathfav=__ROOT__$path
+
+  for x in "${!bashline_favs[@]}" ; do
+    if [[ $path == $x* ]] ; then
+      pathfav=${bashline_favs["$x"]}${path:${#x}}
+      break
+    fi
+  done
+
   local porc=""
+  local pipestatus=""
   local dirty=""
   local index=""
   local unknown=""
   local hostcolors=""
 
   if [ -n "$branch" ] ; then
-    porc=$($t1s $git status --porcelain | cut -c1-2 | tr ' ' .)
-    if [ ${PIPESTATUS[0]} -eq 124 ] ; then
+    porc=$($t1s $git status --porcelain 2>/dev/null)
+    pipestatus=${PIPESTATUS[0]}
+    if [ $pipestatus -eq 124 ] ; then
       dirty='?'
     else
+      porc=$(echo "$porc" | cut -c1-2 | tr ' ' .)
       for x in $porc ; do
         [[ "${x:1:1}" == [MADCRU] ]] && dirty=D
         [[ "${x:0:1}" == [MADCRU] ]] && index=I
@@ -168,26 +114,27 @@ function mkline {
   branch=${branch//\)\)}
   branch=${branch//\(}
   branch=${branch//\)}
+  branch=${branch//|/ }
 
-  if [ -n "${hosts[$hostname]}" ] ; then
-    hostcolors=${hosts[$hostname]}
+  if [ -n "${bashline_hosts[$hostname]}" ] ; then
+    hostcolors=${bashline_hosts[$hostname]}
   else
-    hostcolors=${hosts[default]}
+    hostcolors=${bashline_hosts[default]}
   fi
 
-  colors $hostcolors
+  bashline_colors $hostcolors
 
   if [ -n "$SSH_CLIENT" ] ; then
-    echo -n " "
+    echo -n " $sym_ssh"
   fi
 
-  echo -n " $hostshort "
-  colors ${hostcolors#* } 31
-  echo -n " "
-  colors 231 31
-  echo -n "$meshort "
-  colors 31 240
-  echo -n " "
+  echo -n " $hostshort "
+  bashline_colors ${hostcolors#* } 31
+  echo -n "$sym_section "
+  bashline_colors 231 31
+  echo -n "$meshort "
+  bashline_colors 31 240
+  echo -n "$sym_section "
 
   delim=""
 
@@ -202,46 +149,46 @@ function mkline {
       fi
 
       if [ -n "$delim" ] ; then
-        colors 236 240
-        echo -n $delim
+        bashline_colors 236 240
+        echo -n "$delim "
       fi
 
-      colors 252 240
-      echo -n "$x "
+      bashline_colors 252 240
+      echo -n "$x "
 
-      delim=" "
+      delim="$sym_sep"
     done
-  done <<< "$path"
+  done <<< "$pathfav"
 
   local colorleft=240
 
   if [ -n "$branch" ] ; then
-    colors $colorleft 17
-    echo -n " "
+    bashline_colors $colorleft 17
+    echo -n "$sym_section "
 
     if [ -n "$status" ] ; then
-      colors ${diu[$status]} 17
-      echo -n " $status"
+      bashline_colors ${diu[$status]} 17
+      echo -n "$sym_branch $status"
     else
-      colors 238 17
-      echo -n ""
+      bashline_colors 240 17
+      echo -n "$sym_branch"
     fi
 
-    echo -n "$branch "
+    echo -n "$branch "
     colorleft=17
   fi
 
   if [ "$error" -ne 0 ] ; then
-    colors $colorleft 52
-    echo -n " "
-    colors 231 52
-    echo -n "$error "
+    bashline_colors $colorleft 52
+    echo -n "$sym_section "
+    bashline_colors 231 52
+    echo -n "$error "
     colorleft=52
   fi
 
-  colors $colorleft
-  echo -n " "
-  colors
+  bashline_colors $colorleft
+  echo -n "$sym_section "
+  bashline_colors
 }
 
-mkline
+PROMPT_COMMAND='PS1=$(bashline_prompt "$?" "$(if hash __git_ps1 2>/dev/null ; then __git_ps1 ; else echo " ?" ; fi)" || "$PS1")'
