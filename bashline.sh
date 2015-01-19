@@ -39,7 +39,7 @@ function bashline_prompt {
   fi
 
   local -i shorten=$bashline_shorten
-  if [ $shorten -lt 1 ] ; then shorten=2 ; fi
+  if [ $shorten -lt 1 ] ; then shorten=99 ; fi
 
   if [ ${BASH_VERSINFO[0]} -ge 4 ] ; then
     local -A diu
@@ -62,6 +62,8 @@ function bashline_prompt {
 
   local git=":"
   hash git >/dev/null 2>&1 && git=git
+
+  local timestamp=$(date +%r)
 
   local hostname=${HOSTNAME%%.*}
   if [ -z "$hostname" ] ; then hostname=$($t1s hostname -s) ; fi
@@ -122,6 +124,10 @@ function bashline_prompt {
     hostcolors=${bashline_hosts[default]}
   fi
 
+  bashline_colors 250 236
+  echo -n " $timestamp "
+  bashline_colors 236 ${hostcolors#* }
+  echo -n "$sym_section"
   bashline_colors $hostcolors
 
   if [ -n "$SSH_CLIENT" ] ; then
