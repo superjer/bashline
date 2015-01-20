@@ -63,7 +63,7 @@ function bashline_prompt {
   local git=":"
   hash git >/dev/null 2>&1 && git=git
 
-  local timestamp=$(date +%r)
+  local timestamp=$(echo $(date +%l:%M:%S\ %P))
 
   local hostname=${HOSTNAME%%.*}
   if [ -z "$hostname" ] ; then hostname=$($t1s hostname -s) ; fi
