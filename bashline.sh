@@ -26,7 +26,7 @@ function bashline_prompt {
   local error=$1
   local branch=$2
 
-  local sym_ssh='⚿'
+  local sym_ssh='╾'
   local sym_sep='❭'
   local sym_section='▶'
   local sym_branch='┣'
