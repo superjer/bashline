@@ -23,6 +23,8 @@ function bashline_colors {
 }
 
 function bashline_prompt {
+  echo -ne "\[\033]0;${USER}@${HOSTNAME}: ${PWD}\007\]"
+
   local error=$1
   local branch=$2
 
