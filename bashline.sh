@@ -23,8 +23,6 @@ function bashline_colors {
 }
 
 function bashline_prompt {
-  echo -ne "\[\033]0;${USER}@${HOSTNAME}: ${PWD}\007\]"
-
   local error=$1
   local branch=$2
 
@@ -119,6 +117,9 @@ function bashline_prompt {
   branch=${branch//\(}
   branch=${branch//\)}
   branch=${branch//|/ }
+
+  # update the terminal window title
+  echo -ne "\[\033]0;$hostshort ❭ $meshort ❭ $path\007\]"
 
   if [ -n "${bashline_hosts[$hostname]}" ] ; then
     hostcolors=${bashline_hosts[$hostname]}
