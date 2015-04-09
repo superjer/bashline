@@ -39,7 +39,8 @@ function bashline_echo {
 
 function bashline_prompt {
   bashline_outputlen=0
-  bashline_cols=$(tput cols)
+  bashline_cols=999
+  hash tput >/dev/null 2>&1 && bashline_cols=$(tput cols)
 
   local error=$1
   local branch=$2
