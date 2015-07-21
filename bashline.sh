@@ -99,10 +99,16 @@ function bashline_prompt {
   if [ -z "$path" ] ; then path=PATH_NOT_FOUND ; fi
   local pathfav=__ROOT__$path
 
+  declare -i matchlen
+  declare -i thismatchlen
+  matchlen=0
   for x in "${!bashline_favs[@]}" ; do
-    if [[ $path == $x* ]] ; then
-      pathfav=${bashline_favs["$x"]}${path:${#x}}
-      break
+    if [[ $path == "$x"* ]] ; then
+      thismatchlen=${#x}
+      if [ $thismatchlen -gt $matchlen ] ; then
+        pathfav=${bashline_favs["$x"]}${path:${#x}}
+        matchlen=$thismatchlen
+      fi
     fi
   done
 
