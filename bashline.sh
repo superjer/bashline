@@ -57,8 +57,10 @@ function bashline_prompt {
     local sym_branch=''
   fi
 
-  local -i shorten=$bashline_shorten
-  if [ $shorten -lt 1 ] ; then shorten=99 ; fi
+  local -i hostshorten=$bashline_host_shorten
+  local -i usershorten=$bashline_user_shorten
+  if [ $hostshorten -lt 1 ] ; then hostshorten=99 ; fi
+  if [ $usershorten -lt 1 ] ; then usershorten=99 ; fi
 
   if [ ${BASH_VERSINFO[0]} -ge 4 ] ; then
     local -A diu
@@ -87,12 +89,12 @@ function bashline_prompt {
   local hostname=${HOSTNAME%%.*}
   if [ -z "$hostname" ] ; then hostname=$($t1s hostname -s) ; fi
   if [ -z "$hostname" ] ; then hostname='::'                ; fi
-  local hostshort=${hostname:0:$shorten}
+  local hostshort=${hostname:0:$hostshorten}
 
   local me=$USER
   if [ -z "$me" ] ; then me=$($t1s whoami) ; fi
   if [ -z "$me" ] ; then me=':('           ; fi
-  local meshort=${me:0:$shorten}
+  local meshort=${me:0:$usershorten}
 
   local path=$PWD
   if [ -z "$path" ] ; then path=$($t1s pwd)    ; fi

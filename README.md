@@ -71,7 +71,8 @@ Install and personalize Bashline
 
   You can also shorten host and usernames to your liking:
 
-    bashline_shorten=5  # shorten to just 5 characters
+    bashline_host_shorten=5  # shorten host name to just 5 characters
+    bashline_user_shorten=2  # shorten your name to just 2 characters
 
 Powerline Fonts
 ---------------
