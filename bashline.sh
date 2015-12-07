@@ -87,6 +87,7 @@ function bashline_prompt {
   hash git >/dev/null 2>&1 && git=git
 
   local timestamp=$(echo $(date +%l:%M:%S\ %P))
+  local timestamp=$(echo $(date +%k%M%S))
 
   local hostshort=""
   local hostname=${HOSTNAME%%.*}
