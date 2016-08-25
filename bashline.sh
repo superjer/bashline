@@ -10,6 +10,8 @@ if [ ${BASH_VERSINFO[0]} -ge 4 ] ; then
 
   declare -A bashline_favs # customize these:
   bashline_favs[$HOME]="~"
+
+  declare -A bashline_nicks # customize these:
 fi
 
 declare -i bashline_outputlen
@@ -86,15 +88,25 @@ function bashline_prompt {
 
   local timestamp=$(echo $(date +%l:%M:%S\ %P))
 
+  local hostshort=""
   local hostname=${HOSTNAME%%.*}
   if [ -z "$hostname" ] ; then hostname=$($t1s hostname -s) ; fi
   if [ -z "$hostname" ] ; then hostname='::'                ; fi
-  local hostshort=${hostname:0:$hostshorten}
+  if [ -n "${bashline_nicks[$hostname]}" ] ; then
+    hostshort=${bashline_nicks[$hostname]}
+  else
+    hostshort=${hostname:0:$hostshorten}
+  fi
 
+  local meshort=""
   local me=$USER
   if [ -z "$me" ] ; then me=$($t1s whoami) ; fi
   if [ -z "$me" ] ; then me=':('           ; fi
-  local meshort=${me:0:$usershorten}
+  if [ -n "${bashline_nicks[$me]}" ] ; then
+    meshort=${bashline_nicks[$me]}
+  else
+    meshort=${me:0:$usershorten}
+  fi
 
   local path=$PWD
   if [ -z "$path" ] ; then path=$($t1s pwd)    ; fi
