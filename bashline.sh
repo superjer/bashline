@@ -45,7 +45,6 @@ function bashline_prompt {
   hash tput >/dev/null 2>&1 && bashline_cols=$(tput cols)
 
   local error=$1
-  local branch=$2
 
   local sym_ssh='╾'
   local sym_sep='❭'
@@ -136,23 +135,48 @@ function bashline_prompt {
 
   local porc=""
   local pipestatus=""
-  local dirty=""
-  local index=""
-  local unknown=""
+  local dirty="D"
+  local index="I"
+  local unknown="U"
   local hostcolors=""
+  local branch=""
+
+  local notindotgit=$( $t1s git rev-parse --is-inside-work-tree 2>/dev/null )
+  if [ $? -eq 0 ] ; then
+    if [ "$notindotgit" == 'true' ] ; then
+      git update-index --really-refresh -q &>/dev/null
+      branch=$( $t1s git symbolic-ref --quiet --short HEAD 2> /dev/null || \
+        $t1s git rev-parse --short HEAD 2> /dev/null || \
+        echo '(i dunno what branch)' )
+    fi
+  fi
 
   if [ -n "$branch" ] ; then
-    porc=$($t1s $git status --porcelain 2>/dev/null)
+    $t1s git diff-files --quiet --ignore-submodules --
     pipestatus=${PIPESTATUS[0]}
+    case $pipestatus in
+      124)
+        dirty='?'
+        ;;
+      0)
+        dirty=''
+        ;;
+    esac
+    $t1s git diff --quiet --ignore-submodules --cached
+    pipestatus=${PIPESTATUS[0]}
+    case $pipestatus in
+      124)
+        index='?'
+        ;;
+      0)
+        index=''
+        ;;
+    esac
+    untracked=$( $t1s git ls-files --others --exclude-standard )
     if [ $pipestatus -eq 124 ] ; then
-      dirty='?'
-    else
-      porc=$(echo "$porc" | cut -c1-2 | tr ' ' .)
-      for x in $porc ; do
-        [[ "${x:1:1}" == [MADCRU] ]] && dirty=D
-        [[ "${x:0:1}" == [MADCRU] ]] && index=I
-        [[ "${x:0:1}" == '?'      ]] && unknown=U
-      done
+      unknown='?'
+    elif [ -z "$untracked" ] ; then
+      unknown=''
     fi
   fi
 
@@ -230,7 +254,7 @@ function bashline_prompt {
       bashline_echo "$sym_branch"
     fi
 
-    bashline_echo "$branch "
+    bashline_echo " $branch "
     colorleft=17
   fi
 
@@ -247,7 +271,7 @@ function bashline_prompt {
   bashline_colors
 }
 
-PROMPT_COMMAND='PS1=$(bashline_prompt "$?" "$(if hash __git_ps1 2>/dev/null ; then __git_ps1 ; else echo " ?" ; fi)" || "$PS1")'
+PROMPT_COMMAND='PS1=$(bashline_prompt "$?" || "$PS1")'
 
 # Bash 4.4??
 PS0='\e[0;38;5;250;48;5;236m $(date +%H%M%S) \e[0;38;5;236;48;5;52;49m\e[0m\n'
