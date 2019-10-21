@@ -99,6 +99,13 @@ function bashline_prompt {
     hostshort=${hostname:0:$hostshorten}
   fi
 
+  if test -n "$STY" ; then
+    local screenname=${STY}
+    screenname=${screenname#*.}
+    screenname=${screenname%.*}
+    hostshort="$hostshort $screenname"
+  fi
+
   local meshort=""
   local me=$USER
   if [ -z "$me" ] ; then me=$($t1s whoami) ; fi
